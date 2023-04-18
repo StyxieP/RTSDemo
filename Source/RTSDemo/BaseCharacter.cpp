@@ -13,43 +13,61 @@
 #include "Materials/Material.h"
 #include "Engine/World.h"
 
-// Sets default values
 ABaseCharacter::ABaseCharacter()
 {
+
 	//set up centre sphere
 	SphereMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SphereMesh"));
 	SphereMesh->AttachTo(GetRootComponent());
+
 	static ConstructorHelpers::FObjectFinder<UStaticMesh>SphereMeshAsset(TEXT("StaticMesh'/Engine/BasicShapes/Sphere.Sphere'"));
+	static ConstructorHelpers::FObjectFinder<UMaterial> Getmaterial(TEXT("Material'/Game/Scenes/GeorgesFolder/WorldTextures/Black.Black'"));
+	
 	SphereMesh->SetStaticMesh(SphereMeshAsset.Object);
+	SphereMesh->SetMaterial(0, Getmaterial.Object);
+
+
 
 	// Don't rotate character to camera direction
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
 
-	// Create a camera boom...
-	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
-	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->SetUsingAbsoluteRotation(true); // Don't want arm to rotate when character does
-	CameraBoom->TargetArmLength = 800.f;
-	CameraBoom->SetRelativeRotation(FRotator(-60.f, 0.f, 0.f));
-	CameraBoom->bDoCollisionTest = false; // Don't want to pull camera in when it collides with level
 
-	// Create a camera...
-	TopDownCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("TopDownCamera"));
-	TopDownCameraComponent->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
-	TopDownCameraComponent->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
-	// Create a decal in the world to show the cursor's location
-	CursorToWorld = CreateDefaultSubobject<UDecalComponent>("CursorToWorld");
-	CursorToWorld->SetupAttachment(RootComponent);
+	// Create a camera arm
+	CameraArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraArm"));
+	
+	CameraArm->SetupAttachment(SphereMesh);
+	CameraArm->SetUsingAbsoluteRotation(true); // Don't want arm to rotate when character does
+	CameraArm->SetRelativeRotation(FRotator(-60.f, 0.f, 0.f));
+
+	CameraArm->bDoCollisionTest = false; // Don't want to pull camera in when it collides with level
+	CameraArm->TargetArmLength = 800.f; //this value conrtols zoom
+	
+	
+
+
+
+	// Create a camera
+	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
+	CameraComponent->SetupAttachment(CameraArm, USpringArmComponent::SocketName);
+	CameraComponent->bUsePawnControlRotation = false; // freeze camera rotation
+
+
+
+	// Create crosshair decal
+	Crosshair = CreateDefaultSubobject<UDecalComponent>("CursorToWorld");
+	Crosshair->SetupAttachment(SphereMesh);
 	static ConstructorHelpers::FObjectFinder<UMaterial> DecalMaterialAsset(TEXT("Material'/Game/Scenes/Blueprints/M_Cursor_Decal.M_Cursor_Decal'"));
 	if (DecalMaterialAsset.Succeeded())
 	{
-		CursorToWorld->SetDecalMaterial(DecalMaterialAsset.Object);
+		Crosshair->SetDecalMaterial(DecalMaterialAsset.Object);
 	}
-	CursorToWorld->DecalSize = FVector(16.0f, 32.0f, 32.0f);
-	CursorToWorld->SetRelativeRotation(FRotator(90.0f, 0.0f, 0.0f).Quaternion());
+	Crosshair->DecalSize = FVector(16.0f, 32.0f, 32.0f);
+	Crosshair->SetRelativeRotation(FRotator(90.0f, 0.0f, 0.0f).Quaternion());
+
+
 
 	// Activate ticking in order to update the cursor every frame.
 	PrimaryActorTick.bCanEverTick = true;
@@ -68,7 +86,7 @@ void ABaseCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (CursorToWorld != nullptr)
+	/*if (CursorToWorld != nullptr)
 	{
 		if (UHeadMountedDisplayFunctionLibrary::IsHeadMountedDisplayEnabled())
 		{
@@ -93,7 +111,7 @@ void ABaseCharacter::Tick(float DeltaTime)
 			CursorToWorld->SetWorldLocation(TraceHitResult.Location);
 			CursorToWorld->SetWorldRotation(CursorR);
 		}
-	}
+	}*/
 }
 
 /* // Called to bind functionality to input

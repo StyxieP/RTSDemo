@@ -19,13 +19,13 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	// Returns TopDownCameraComponent subobject
-	FORCEINLINE class UCameraComponent* GetTopDownCameraComponent() const { return TopDownCameraComponent; }
+	FORCEINLINE class UCameraComponent* GetTopDownCameraComponent() const { return CameraComponent; }
 
 	// Returns CameraBoom subobject
-	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
+	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraArm; }
 
 	// Returns CursorToWorld subobject
-	FORCEINLINE class UDecalComponent* GetCursorToWorld() { return CursorToWorld; }
+	FORCEINLINE class UDecalComponent* GetCursorToWorld() { return Crosshair; }
 
 
 protected:
@@ -33,18 +33,18 @@ protected:
 	virtual void BeginPlay() override;
 
 private:
-	// Top down camera
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-		class UCameraComponent* TopDownCameraComponent;
+		class UCameraComponent* CameraComponent;
 
-	// Camera boom positioning the camera above the character
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-		class USpringArmComponent* CameraBoom;
+		class USpringArmComponent* CameraArm;
 
-	// A decal that projects to the cursor location.
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-		class UDecalComponent* CursorToWorld;
+		class UDecalComponent* Crosshair;
 
+	//sphere to check the centering of the camera
+	UPROPERTY(EditAnywhere, Category = Camera)
 	UStaticMeshComponent* SphereMesh;
 
 	// Called to bind functionality to input
