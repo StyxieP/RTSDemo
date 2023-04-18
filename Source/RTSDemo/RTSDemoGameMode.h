@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include "GameFramework/DefaultPawn.h"
+#include "BaseCharacter.h"
 #include "RTSDemoGameMode.generated.h"
 
 UCLASS(minimalapi)
