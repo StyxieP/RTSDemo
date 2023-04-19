@@ -58,7 +58,7 @@ ABaseCharacter::ABaseCharacter()
 
 	// Create crosshair decal
 	Crosshair = CreateDefaultSubobject<UDecalComponent>("CursorToWorld");
-	Crosshair->SetupAttachment(SphereMesh);
+	Crosshair->SetupAttachment(RootComponent);
 	static ConstructorHelpers::FObjectFinder<UMaterial> DecalMaterialAsset(TEXT("Material'/Game/Scenes/Blueprints/M_Cursor_Decal.M_Cursor_Decal'"));
 	if (DecalMaterialAsset.Succeeded())
 	{
@@ -86,7 +86,7 @@ void ABaseCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	/*if (CursorToWorld != nullptr)
+	if (Crosshair != nullptr)
 	{
 		if (UHeadMountedDisplayFunctionLibrary::IsHeadMountedDisplayEnabled())
 		{
@@ -94,12 +94,12 @@ void ABaseCharacter::Tick(float DeltaTime)
 			{
 				FHitResult HitResult;
 				FCollisionQueryParams Params(NAME_None, FCollisionQueryParams::GetUnknownStatId());
-				FVector StartLocation = TopDownCameraComponent->GetComponentLocation();
-				FVector EndLocation = TopDownCameraComponent->GetComponentRotation().Vector() * 2000.0f;
+				FVector StartLocation = CameraComponent->GetComponentLocation();
+				FVector EndLocation = CameraComponent->GetComponentRotation().Vector() * 2000.0f;
 				Params.AddIgnoredActor(this);
 				World->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECC_Visibility, Params);
 				FQuat SurfaceRotation = HitResult.ImpactNormal.ToOrientationRotator().Quaternion();
-				CursorToWorld->SetWorldLocationAndRotation(HitResult.Location, SurfaceRotation);
+				Crosshair->SetWorldLocationAndRotation(HitResult.Location, SurfaceRotation);
 			}
 		}
 		else if (APlayerController* PC = Cast<APlayerController>(GetController()))
@@ -108,10 +108,10 @@ void ABaseCharacter::Tick(float DeltaTime)
 			PC->GetHitResultUnderCursor(ECC_Visibility, true, TraceHitResult);
 			FVector CursorFV = TraceHitResult.ImpactNormal;
 			FRotator CursorR = CursorFV.Rotation();
-			CursorToWorld->SetWorldLocation(TraceHitResult.Location);
-			CursorToWorld->SetWorldRotation(CursorR);
+			Crosshair->SetWorldLocation(TraceHitResult.Location);
+			Crosshair->SetWorldRotation(CursorR);
 		}
-	}*/
+	}
 }
 
 /* // Called to bind functionality to input
