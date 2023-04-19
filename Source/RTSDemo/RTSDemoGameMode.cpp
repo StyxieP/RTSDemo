@@ -2,7 +2,7 @@
 
 #include "RTSDemoGameMode.h"
 #include "RTSDemoPlayerController.h"
-#include "RTSDemoCharacter.h"
+#include "BaseCamera.h"
 #include "UObject/ConstructorHelpers.h"
 
 ARTSDemoGameMode::ARTSDemoGameMode()
@@ -12,7 +12,7 @@ ARTSDemoGameMode::ARTSDemoGameMode()
 	
 	if (DefaultPawnClass == ADefaultPawn::StaticClass())
 	{
-		DefaultPawnClass = ABaseCharacter::StaticClass();
+		DefaultPawnClass = ABaseCamera::StaticClass();
 	}
 
 	// set default pawn class to our Blueprinted character
