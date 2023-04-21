@@ -6,12 +6,11 @@
 // Sets default values
 ACPP_CameraPawn::ACPP_CameraPawn()
 {
- 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+
+
+	// Activate ticking in order to update the cursor every frame.
 	PrimaryActorTick.bCanEverTick = true;
-
-
-
-
+	PrimaryActorTick.bStartWithTickEnabled = true;
 }
 
 // Called when the game starts or when spawned
@@ -26,6 +25,7 @@ void ACPP_CameraPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	
 }
 
 // Called to bind functionality to input

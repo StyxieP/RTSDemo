@@ -4,6 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "GameFramework/PlayerController.h"
+#include "Kismet/GameplayStatics.h"
+#include "Components/DecalComponent.h"
+#include "HeadMountedDisplayFunctionLibrary.h"
+#include "Camera/CameraComponent.h"
 #include "CPP_CameraPawn.generated.h"
 
 UCLASS()
